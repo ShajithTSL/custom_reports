@@ -1,0 +1,291 @@
+{
+ "template_name": "Maintenance Contract - Standard",
+ "reference_doctype": "",
+ "description": "Radiology equipment maintenance contract with KPIs, signatures and Annexes A–E",
+ "blocks": [
+  {
+   "block_type": "Title",
+   "title": "Maintenance Contract",
+   "value": "Radiology Equipment Preventive & Corrective Maintenance Services",
+   "expected": "(Under the Laws of the United Arab Emirates)"
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>This Maintenance Contract (\"Contract\") is made and entered into on {{contract_date}}, by and between:</p>"
+  },
+  {
+   "block_type": "Sub Heading",
+   "title": "Supplier",
+   "no_number": 1
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>{{supplier_name}}, a company incorporated and existing under the laws of the United Arab Emirates, having its principal office at {{supplier_address}}, duly represented by {{supplier_signatory}}, {{supplier_signatory_title}} (hereinafter referred to as the \"Supplier\"),</p>"
+  },
+  {
+   "block_type": "Sub Heading",
+   "title": "AND",
+   "no_number": 1
+  },
+  {
+   "block_type": "Sub Heading",
+   "title": "Customer",
+   "no_number": 1
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>{{customer_name}}, having its principal office at {{customer_address}}, (hereinafter referred to as the \"Customer\").</p><p>Collectively referred to as the \"Parties\" and individually as a \"Party\".</p>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Definitions"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>Refers to the radiology equipment listed in Annex A of this Contract.</p>",
+   "no_number": 1,
+   "title": "Equipment:"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>Includes preventive maintenance, corrective maintenance, and technical support, as further detailed in Annex B.</p>",
+   "no_number": 1,
+   "title": "Maintenance Services:"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Scope of Services"
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>The Supplier shall provide maintenance services for the Equipment during the Term in accordance with the terms and conditions set forth herein and in accordance with the applicable regulations and standards of the UAE Ministry of Health and Prevention (MOHAP) and other relevant UAE laws.</p>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Term"
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>This Contract shall commence on {{start_date}} and shall continue for a period of {{contract_period}}, unless earlier terminated in accordance with Clause 11 (\"Termination\").</p>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Service Schedule"
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>Preventive maintenance shall be carried out quarterly, with unscheduled corrective maintenance provided upon request, subject to the service response times outlined in Annex C.</p>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Fees and Payment Terms"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>The Customer shall pay the Supplier an annual maintenance fee of {{annual_fee}}, payable as per the schedule in Annex D.</p>"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>All invoices shall be payable within 30 days from the date of issuance.</p>"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>VAT shall be charged in accordance with UAE Federal Decree-Law No. (8) of 2017 on Value Added Tax.</p>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Customer's Obligations"
+  },
+  {
+   "block_type": "Text",
+   "content": "<ul><li>Provide access to the Equipment and facilities during working hours.</li><li>Ensure that the Equipment is operated in accordance with the manufacturer's instructions.</li><li>Inform the Supplier promptly of any defects or malfunctions.</li></ul>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Supplier's Obligations"
+  },
+  {
+   "block_type": "Text",
+   "content": "<ul><li>Maintain qualified technical personnel for service delivery.</li><li>Perform all services in a professional and workmanlike manner.</li><li>Maintain service logs and provide documentation upon request.</li></ul>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Exclusions"
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>Maintenance does not include:</p><ul><li>Damage due to negligence, misuse, or unauthorized modifications.</li><li>Consumables, accessories, or parts unless otherwise agreed in Annex E.</li></ul>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Limitation of Liability"
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>Except for gross negligence or willful misconduct, the Supplier's liability shall not exceed the total amount paid by the Customer in the 12 months preceding the claim. The Supplier shall not be liable for consequential or indirect damages.</p>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Applicable Law and Dispute Resolution"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>This Contract shall be governed by the laws of the United Arab Emirates.</p>"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>Any dispute arising under or in connection with this Contract shall be subject to the exclusive jurisdiction of the courts of Dubai (unless the Parties agree to arbitration, if applicable).</p>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Termination"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>The Supplier may terminate this Contract upon written notice if the Customer fails to comply with the agreed payment terms after being given a 15-day written notice to remedy the breach. The Supplier shall be entitled to payment for all services rendered up to the effective date of termination.</p>",
+   "title": "Supplier Termination Right:"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>Customer shall have the right to immediately terminate this Agreement by written notice to the Second Party in the event of repeated poor performance, material breach of its contractual obligations, or failure to provide the services in accordance with the required standards. In such event, the First Party shall only be liable to pay for the services properly performed and accepted up to the effective date of termination, and the Second Party shall not be entitled to any compensation, damages, loss of profit, or any other payment arising from such termination.</p>",
+   "title": "Customer Termination Right:"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Force Majeure"
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>Neither Party shall be liable for failure or delay in performance due to circumstances beyond their reasonable control, including but not limited to acts of God, government restrictions, wars, or natural disasters.</p>"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Miscellaneous"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>This Contract constitutes the entire agreement between the Parties.</p>",
+   "title": "Entire Agreement:"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>Any amendment shall be in writing and signed by both Parties.</p>",
+   "title": "Amendments:"
+  },
+  {
+   "block_type": "Clause",
+   "content": "<p>All notices must be sent to the registered addresses of the Parties as mentioned above.</p>",
+   "title": "Notices:"
+  },
+  {
+   "block_type": "Heading",
+   "title": "Key Performance Indicators (KPIs)"
+  },
+  {
+   "block_type": "Table Row",
+   "title": "Preventive Maintenance (PM) Compliance",
+   "value": "100%",
+   "expected": "All four scheduled preventive maintenance visits are completed as per the annual maintenance schedule.",
+   "col_labels": "KPI, Target, Evaluation Criteria"
+  },
+  {
+   "block_type": "Table Row",
+   "title": "Equipment Uptime",
+   "value": "≥ 98%",
+   "expected": "Equipment remains operational for at least 98% of the contract period, excluding planned preventive maintenance."
+  },
+  {
+   "block_type": "Table Row",
+   "title": "Breakdown Response Time Compliance",
+   "value": "≥ 95% within 24 hours",
+   "expected": "Service engineer attends the site within 24 hours of receiving the breakdown notification."
+  },
+  {
+   "block_type": "Table Row",
+   "title": "Repair Completion Time",
+   "value": "≥ 90% within 96 hours",
+   "expected": "Breakdown repairs are completed within 72 hours after fault diagnosis, subject to spare parts availability."
+  },
+  {
+   "block_type": "Signatures",
+   "title": "IN WITNESS WHEREOF, the Parties have executed this Maintenance Contract as of the date first above written.",
+   "col_labels": "SUPPLIER, CUSTOMER",
+   "value": "Name: {{supplier_signatory}}\nTitle: {{supplier_signatory_title}}\nDate: {{contract_date}}",
+   "expected": "Name: {{customer_signatory}}\nTitle: {{customer_signatory_title}}\nDate:"
+  },
+  {
+   "block_type": "Page Break"
+  },
+  {
+   "block_type": "Part Title",
+   "title": "Annexes"
+  },
+  {
+   "block_type": "Sub Heading",
+   "title": "Annex A — List of Equipment under CAMC & AMC (Labor Only)",
+   "no_number": 1
+  },
+  {
+   "block_type": "Text",
+   "content": "<p>Refer to the attached quotation, reference number {{quotation_no}}, dated {{quotation_date}}. Contract start and end dates for each item are to be confirmed and inserted below.</p>"
+  },
+  {
+   "block_type": "Data Table",
+   "source": "items",
+   "col_fields": "#, description, model, contract_type, start_date, end_date",
+   "col_labels": "No., Description, Model, Contract Type, Contract Start Date, Contract End Date"
+  },
+  {
+   "block_type": "Sub Heading",
+   "title": "Annex B — Scope of Maintenance Services",
+   "no_number": 1
+  },
+  {
+   "block_type": "Text",
+   "content": "<ul><li>Preventive maintenance shall be carried out as per the schedule and manufacturers' recommendations.</li><li>For \"On Call\" services, {{supplier_name}} engineers/personnel will visit the Customer \"On Call\" and will carry out requisite repair and maintenance of the Products as and when required by the Customer during business hours.</li><li>{{supplier_name}} will deploy a qualified engineer locally for a quick response.</li></ul>"
+  },
+  {
+   "block_type": "Sub Heading",
+   "title": "Annex C — Service Response Times",
+   "no_number": 1
+  },
+  {
+   "block_type": "Text",
+   "content": "<ul><li>All service calls will be attended to within 24 hours by the engineer after notification, and critical spare parts will be replaced within 96 hours after identification of the faulty part.</li></ul>"
+  },
+  {
+   "block_type": "Sub Heading",
+   "title": "Annex D — Payment Schedule",
+   "no_number": 1
+  },
+  {
+   "block_type": "Text",
+   "content": "<ul><li>Billing and invoice submission on a quarterly basis — 4 payments.</li><li>30-day credit period after submission of invoice and PM reports.</li><li>First payment in advance.</li></ul>"
+  },
+  {
+   "block_type": "Sub Heading",
+   "title": "Annex E — Parts and Consumables Terms — CAMC",
+   "no_number": 1
+  },
+  {
+   "block_type": "Text",
+   "content": "<ul><li>Replacement, repair, and maintenance of Products/Spare Parts will be covered under this Contract.</li><li>Replacement of parts — new parts of equivalent performance shall be provided at the sole discretion of {{supplier_name}}.</li><li>All spare parts are included except those listed under exclusions.</li><li>Software updates are accessible for update with the current units.</li><li>Exclusions: UPS batteries, injector & accessories, bed cushions, patient consumables/accessories, magnet quenches due to any circumstances, Ultrasound probes and helium.</li><li>One-time helium filling process included.</li><li>{{supplier_name}} will maintain a minimum essential spare part inventory locally.</li><li>Labor only included for KKT Chiller.</li></ul>"
+  },
+  {
+   "block_type": "Sub Heading",
+   "title": "Parts and Consumables Terms — AMC",
+   "no_number": 1
+  },
+  {
+   "block_type": "Text",
+   "content": "<ul><li>No parts included for AMC (Labor Only) list of equipment as per quote.</li><li>Unlimited call services.</li><li>Four (4) preventive maintenance visits included.</li></ul>"
+  },
+  {
+   "block_type": "Signatures",
+   "title": "IN WITNESS WHEREOF, the Parties have executed this Maintenance Contract as of the date first above written.",
+   "col_labels": "SUPPLIER, CUSTOMER",
+   "value": "Name: {{supplier_signatory}}\nTitle: {{supplier_signatory_title}}\nDate: {{contract_date}}",
+   "expected": "Name: {{customer_signatory}}\nTitle: {{customer_signatory_title}}\nDate:"
+  }
+ ]
+}

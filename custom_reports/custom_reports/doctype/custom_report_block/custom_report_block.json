@@ -1,0 +1,180 @@
+{
+ "actions": [],
+ "creation": "2026-11-12 10:00:00.000000",
+ "modified": "2026-11-12 10:00:00.000000",
+ "owner": "Administrator",
+ "modified_by": "Administrator",
+ "doctype": "DocType",
+ "name": "Custom Report Block",
+ "module": "Custom Reports",
+ "engine": "InnoDB",
+ "istable": 1,
+ "editable_grid": 1,
+ "field_order": [
+  "block_type",
+  "title",
+  "content",
+  "value",
+  "expected",
+  "col4",
+  "col5",
+  "col6",
+  "col7",
+  "col8",
+  "source",
+  "col_fields",
+  "col_labels",
+  "status",
+  "image",
+  "image_from",
+  "columns",
+  "image_height",
+  "no_number",
+  "allow_break"
+ ],
+ "fields": [
+  {
+   "fieldname": "block_type",
+   "fieldtype": "Select",
+   "label": "Block Type",
+   "options": "Title\nPart Title\nHeading\nSub Heading\nClause\nText\nKey-Value\nTable Row\nData Table\nSignatures\nImage\nSpacer\nPage Break",
+   "reqd": 1,
+   "in_list_view": 1,
+   "columns": 2,
+   "default": "Text"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Small Text",
+   "label": "Title / Item / Caption",
+   "in_list_view": 1,
+   "columns": 3,
+   "depends_on": "eval:![\"Text\",\"Spacer\",\"Page Break\",\"Data Table\"].includes(doc.block_type)",
+   "description": "Heading text, clause lead-in (e.g. 'Supplier Termination Right:'), first table column, image caption, Title block: the main title, Signatures block: the line above (e.g. IN WITNESS WHEREOF \u2026)"
+  },
+  {
+   "fieldname": "content",
+   "fieldtype": "Text Editor",
+   "label": "Content",
+   "depends_on": "eval:[\"Text\",\"Clause\"].includes(doc.block_type)",
+   "description": "Use {{fieldname}} to insert a value from the document, e.g. {{customer_name}}."
+  },
+  {
+   "fieldname": "value",
+   "fieldtype": "Small Text",
+   "label": "Value / Column 2 / Subtitle",
+   "in_list_view": 1,
+   "columns": 3,
+   "depends_on": "eval:[\"Key-Value\",\"Table Row\",\"Title\",\"Signatures\"].includes(doc.block_type)",
+   "description": "Title block: subtitle. Signatures block: lines under the LEFT signature (one per line)."
+  },
+  {
+   "fieldname": "expected",
+   "fieldtype": "Small Text",
+   "label": "Column 3 / Note",
+   "depends_on": "eval:[\"Table Row\",\"Title\",\"Signatures\"].includes(doc.block_type)",
+   "description": "Title block: small note under the title. Signatures block: lines under the RIGHT signature."
+  },
+  {
+   "fieldname": "col4",
+   "fieldtype": "Data",
+   "label": "Column 4",
+   "depends_on": "eval:doc.block_type==\"Table Row\""
+  },
+  {
+   "fieldname": "col5",
+   "fieldtype": "Data",
+   "label": "Column 5",
+   "depends_on": "eval:doc.block_type==\"Table Row\""
+  },
+  {
+   "fieldname": "col6",
+   "fieldtype": "Data",
+   "label": "Column 6",
+   "depends_on": "eval:doc.block_type==\"Table Row\""
+  },
+  {
+   "fieldname": "col7",
+   "fieldtype": "Data",
+   "label": "Column 7",
+   "depends_on": "eval:doc.block_type==\"Table Row\""
+  },
+  {
+   "fieldname": "col8",
+   "fieldtype": "Data",
+   "label": "Column 8",
+   "depends_on": "eval:doc.block_type==\"Table Row\""
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Data",
+   "label": "Child Table Field",
+   "depends_on": "eval:doc.block_type==\"Data Table\"",
+   "description": "Data Table: fieldname of the child table on the document, e.g. items"
+  },
+  {
+   "fieldname": "col_fields",
+   "fieldtype": "Small Text",
+   "label": "Columns (fieldnames)",
+   "depends_on": "eval:doc.block_type==\"Data Table\"",
+   "description": "Data Table: child-table fieldnames, comma separated, e.g. #, item_name, model, start_date (# = row number)"
+  },
+  {
+   "fieldname": "col_labels",
+   "fieldtype": "Data",
+   "label": "Column Headers",
+   "depends_on": "eval:[\"Key-Value\",\"Table Row\",\"Data Table\",\"Signatures\"].includes(doc.block_type)",
+   "description": "Comma separated, on the FIRST row of a table (Table Row: the number of headers = number of columns, up to 8). Signatures: the two labels, e.g. SUPPLIER, CUSTOMER"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "Status",
+   "hidden": 1
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image",
+   "depends_on": "eval:doc.block_type==\"Image\""
+  },
+  {
+   "fieldname": "image_from",
+   "fieldtype": "Data",
+   "label": "Take Photo From",
+   "depends_on": "eval:doc.block_type==\"Image\"",
+   "description": "Optional: fieldname holding the photo, filled in when the template loads"
+  },
+  {
+   "fieldname": "columns",
+   "fieldtype": "Select",
+   "label": "Images per Row",
+   "options": "\n1\n2\n3",
+   "depends_on": "eval:doc.block_type==\"Image\""
+  },
+  {
+   "fieldname": "image_height",
+   "fieldtype": "Select",
+   "label": "Size",
+   "options": "\nSmall\nMedium\nLarge",
+   "depends_on": "eval:[\"Image\",\"Spacer\"].includes(doc.block_type)"
+  },
+  {
+   "fieldname": "no_number",
+   "fieldtype": "Check",
+   "label": "Don't Number",
+   "depends_on": "eval:[\"Heading\",\"Sub Heading\",\"Clause\"].includes(doc.block_type)"
+  },
+  {
+   "fieldname": "allow_break",
+   "fieldtype": "Check",
+   "label": "Allow Page Break",
+   "depends_on": "eval:[\"Heading\",\"Sub Heading\"].includes(doc.block_type)"
+  }
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "links": []
+}

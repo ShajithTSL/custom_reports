@@ -1,0 +1,291 @@
+{#- =====================================================================
+    Custom Reports – block-based print template (any DocType)
+    Used by the print format "Custom Report - <DocType>" via {% include %}.
+    {{fieldname}} placeholders in text are filled from the document.
+    ===================================================================== -#}
+{%- set CS = frappe.get_doc("Custom Reports Settings") -%}
+{%- set PC = CS.primary_color or "#1F4E79" -%}
+{%- set AC = CS.accent_color or "#B8963E" -%}
+{%- set SERIF = (CS.font or "Serif").startswith("Serif") -%}
+{%- set FONT = 'Georgia, Cambria, "Times New Roman", "DejaVu Serif", serif' if SERIF else 'Arial, Helvetica, "DejaVu Sans", sans-serif' -%}
+{%- set UPPER = CS.uppercase_headings if CS.uppercase_headings is not none else 1 -%}
+{%- set PAGE_NO = CS.show_page_numbers if CS.show_page_numbers is not none else 1 -%}
+{%- set S_H = "color:" ~ PC ~ " !important;font-weight:bold !important;" -%}
+{%- set S_TH = "background:" ~ PC ~ " !important;color:#ffffff !important;font-weight:bold !important;border:1px solid " ~ PC ~ " !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;" -%}
+{%- set FS = (CS.font_size or 8.5)|float -%}
+{%- set TFS = (CS.table_font_size or (FS - 0.5))|float -%}
+{%- set mb = 24 if (PAGE_NO or CS.footer_text) else 12 -%}
+
+{#- header: logo left, italic text right, thin line – repeated on every PDF page.
+    A row in "Enabled DocTypes" can override the logo / text for its DocType. -#}
+{%- set HD = namespace(show=(CS.show_header if CS.show_header is not none else 1), logo=CS.header_logo, text=CS.header_text) -%}
+{%- for r in (CS.doctypes or []) -%}{%- if r.document_type == doc.doctype -%}
+  {%- if r.header_logo %}{% set HD.logo = r.header_logo %}{% endif -%}
+  {%- if r.header_text and r.header_text.strip() %}{% set HD.text = r.header_text %}{% endif -%}
+{%- endif -%}{%- endfor -%}
+{%- set own = doc.get("cr_header_text") or (doc.get("header_text") if doc.doctype == "Custom Report Template" else none) -%}
+{%- if own and own.strip() %}{% set HD.text = own %}{% endif -%}
+{%- if HD.text is none %}{% set HD.text = "Maintenance Contract — {{supplier_name}} / {{customer_name}}" %}{% endif -%}
+{%- set HD.logo = header_logo(doc, HD.logo) if HD.show else none -%}
+{%- set logo_h = (CS.logo_height or 14)|float -%}
+{%- set hd_lines = ((HD.text or "").strip().split("\n")|length) if (HD.text or "").strip() else 0 -%}
+{%- set mt = (([logo_h if HD.logo else 0, hd_lines * 5.5]|max) + 12)|round|int if HD.show else 14 -%}
+
+{%- macro nl2br(t) -%}{{ (t or "")|e|replace("\n", "<br>") }}{%- endmacro -%}
+{%- macro ph(t) -%}{{ fill(doc, t) }}{%- endmacro -%}
+{%- macro phl(t) -%}{{ fill(doc, (t or "")|e)|replace("\n", "<br>") }}{%- endmacro -%}
+
+<style>
+  #header-html .cr-hd { width: 100%; border-collapse: collapse; border-bottom: 1px solid {{ CS.header_line_color or "#C9D3DE" }}; }
+  #header-html .cr-hd td { vertical-align: middle; padding: 0 0 2mm 0; }
+  #header-html .cr-hd .txt { text-align: right; font-family: {{ FONT }}; font-style: italic; font-size: 8pt; color: #444; line-height: 1.35; }
+  .print-format { margin-top: {{ mt }}mm; margin-bottom: {{ mb }}mm; margin-left: 16mm; margin-right: 16mm;
+                  font-family: {{ FONT }}; font-size: {{ FS }}pt; color: #222; line-height: 1.45; }
+  .print-format p { margin: 0 0 6px 0; }
+  .cr-title { text-align: center; margin: 0 0 4mm 0; }
+  .cr-title h1 { font-family: {{ FONT }}; font-size: {{ FS + 9.5 }}pt; letter-spacing: .5px; margin: 0; text-transform: uppercase; }
+  .cr-title .sub { font-style: italic; color: #444; font-size: {{ FS + 0.5 }}pt; margin-top: 1mm; }
+  .cr-title .rule { border-top: 1.5px solid {{ AC }}; margin: 2.5mm 0 3mm 0; }
+  .cr-title .note { font-style: italic; color: #555; font-size: {{ FS - 1 }}pt; }
+  .cr-part { text-align: center; margin: 2mm 0 4mm 0; }
+  .cr-part h1 { font-family: {{ FONT }}; font-size: {{ FS + 5.5 }}pt; margin: 0; text-transform: uppercase; }
+  .cr-part .rule { border-top: 1.5px solid {{ AC }}; margin-top: 2mm; }
+  h2.blk-h { font-family: {{ FONT }}; font-size: {{ FS + 2 }}pt; margin: 6mm 0 2.5mm 0; padding-bottom: 1.2mm;
+             border-bottom: 1.5px solid {{ PC }}; page-break-after: avoid; {% if UPPER %}text-transform: uppercase;{% endif %} }
+  h3.blk-sh { font-family: {{ FONT }}; font-size: {{ FS + 0.5 }}pt; margin: 4mm 0 1.5mm 0; page-break-after: avoid; }
+  .blk-text { margin: 0 0 2mm 0; text-align: justify; }
+  .blk-text ul, .blk-text ol { margin: 1mm 0 2mm 0; padding-left: 6mm; }
+  .blk-text li { margin-bottom: 1mm; }
+  .blk-text .ql-editor { padding: 0; }
+  .blk-text .ql-indent-1 { margin-left: 6mm; } .blk-text .ql-indent-2 { margin-left: 12mm; }
+  .clause { margin: 0 0 2.5mm 0; text-align: justify; }
+  .clause .cr-num { color: {{ PC }}; font-weight: bold; margin-right: 1.5mm; }
+  .clause .cr-lead { font-weight: bold; font-size: inherit !important; line-height: inherit; }
+  .clause p, .blk-text p, .blk-text li { font-size: {{ FS }}pt; }
+  .clause .ql-editor { padding: 0; } .clause p { margin: 0 0 4px 0; }
+  table.grid { width: 100%; border-collapse: collapse; margin: 1.5mm 0 3.5mm 0; }
+  table.grid th { text-align: left; padding: 4px 6px; font-size: {{ TFS }}pt !important; line-height: 1.3; }
+  table.grid td { border: 1px solid #c8d0dc; padding: 4px 6px; vertical-align: top; font-size: {{ TFS }}pt !important; line-height: 1.35; }
+  table.grid tr { page-break-inside: avoid; }
+  table.grid tbody tr:nth-child(even) td { background: #f5f7fb; }
+  table.grid td.c-first { font-weight: bold; }
+  .sigs { page-break-inside: avoid; margin: 8mm 0 4mm 0; }
+  .sigs .intro { text-align: center; font-weight: bold; margin-bottom: 6mm; }
+  table.sigt { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  table.sigt td { vertical-align: top; padding: 0 6mm 0 0; font-size: {{ FS }}pt; }
+  .sigs .intro, .sigt .ln { font-size: {{ FS }}pt; }
+  .sigt .lbl { font-size: {{ FS + 1 }}pt; }
+  .sigt .lbl { color: {{ PC }}; font-weight: bold; text-transform: uppercase; margin-bottom: 2mm; }
+  .sigt .space { height: 24mm; }
+  .sigt .line { border-top: 1px solid #333; margin: 0 4mm 1.5mm 0; }
+  .sigt .cap { font-style: italic; font-size: {{ FS }}pt; color: #555; margin-bottom: 2mm; }
+  .sigt .ln { margin-bottom: 2.2mm; }
+  .figs { margin: 1.5mm 0 2.5mm 0; }
+  .figrow { page-break-inside: avoid; margin: 0 auto 1.5mm auto; }
+  table.figtbl { border-collapse: collapse; table-layout: fixed; margin: 0 auto; }
+  table.figtbl > tbody > tr > td, table.figtbl > tr > td { text-align: center; vertical-align: top; padding: 1mm 1.5mm; }
+  table.phbox { width: 100%; border-collapse: collapse; }
+  table.phbox td { text-align: center; vertical-align: middle; padding: 0; }
+  table.phbox img { max-width: 100%; border: 1px solid #ccc; }
+  .figcap { font-size: {{ FS }}pt; font-style: italic; color: {{ PC }}; margin-top: 1mm; }
+  .page-break { page-break-after: always; }
+  .keep { page-break-inside: avoid; display: block; }
+</style>
+
+{%- set blocks = [] -%}
+{%- for b in (doc.get("cr_blocks") or doc.get("blocks") or []) -%}
+  {%- if not (b.block_type == "Image" and not b.image) -%}{%- set _ = blocks.append(b) -%}{%- endif -%}
+{%- endfor -%}
+{%- set rows = [] -%}
+{%- set ns = namespace(h=0, s=0, fig=0, cols=2, size="", cell=0, tcols=3, gcount=0, keep_open=false) -%}
+
+{%- for b in blocks -%}
+  {%- set prev = blocks[loop.index0 - 1].block_type if not loop.first else None -%}
+  {%- set nxt = blocks[loop.index0 + 1].block_type if not loop.last else None -%}
+  {%- set t = b.block_type -%}
+
+  {#- Keep a section together on one page (unless "Allow Page Break" is ticked on its heading):
+      a heading / sub heading with its text, tables and photos
+      is wrapped in <div class="keep"> (no page break inside) when it is short enough to fit on a page.
+      Long sections (e.g. 10+ photos) are not wrapped and break normally. -#}
+  {%- if t in ["Heading", "Sub Heading", "Part Title", "Page Break"] and not (t == "Sub Heading" and prev == "Heading") -%}
+    {%- if ns.keep_open %}</div>{% set ns.keep_open = false %}{% endif -%}
+    {%- if t != "Page Break" -%}
+      {%- set est = namespace(mm=(12 if t == "Heading" else 9), stop=false, skip_sub=(t == "Heading"), icols=2, isize="Medium") -%}
+      {%- for x in blocks[loop.index0 + 1:] -%}
+        {%- if not est.stop -%}
+          {%- set xt = x.block_type -%}
+          {%- if xt == "Sub Heading" and est.skip_sub -%}{%- set est.mm = est.mm + 9 -%}{%- set est.skip_sub = false -%}
+          {%- elif xt in ["Heading", "Sub Heading", "Part Title", "Page Break"] -%}{%- set est.stop = true -%}
+          {%- else -%}
+            {%- set est.skip_sub = false -%}
+            {%- if xt == "Text" -%}
+              {%- set est.mm = est.mm + 5 + ((x.content or "")|striptags|length / 100)|round(0, "ceil") * 5 + (x.content or "").count("<li") * 1.5 -%}
+            {%- elif xt == "Image" -%}
+              {%- set c = (x.columns or est.icols)|int -%}{%- set c = c if c in [1, 2, 3] else 2 -%}
+              {%- set z = x.image_height if x.image_height in ["Small", "Medium", "Large"] else "Medium" -%}
+              {%- set hh = {1: {"Small": 55, "Medium": 75, "Large": 100}, 2: {"Small": 38, "Medium": 52, "Large": 70}, 3: {"Small": 30, "Medium": 40, "Large": 52}}[c][z] -%}
+              {%- set est.mm = est.mm + (hh + 10) / c -%}
+            {%- else -%}{%- set est.mm = est.mm + 7.5 -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if est.mm < 225 and not b.allow_break %}<div class="keep">{% set ns.keep_open = true %}{% endif -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- if t == "Title" -%}
+    <div class="cr-title">
+      <h1 style="{{ S_H }}">{{ ph(b.title|e) }}</h1>
+      {%- if b.value %}<div class="sub">{{ phl(b.value) }}</div>{% endif %}
+      <div class="rule"></div>
+      {%- if b.expected %}<div class="note">{{ phl(b.expected) }}</div>{% endif %}
+    </div>
+
+  {%- elif t == "Part Title" -%}
+    <div class="cr-part"><h1 style="{{ S_H }}">{{ ph(b.title|e) }}</h1><div class="rule"></div></div>
+
+  {%- elif t == "Heading" -%}
+    {%- if not b.no_number %}{% set ns.h = ns.h + 1 %}{% set ns.s = 0 %}{% endif -%}
+    <h2 class="blk-h" style="{{ S_H }}">{% if not b.no_number %}{{ ns.h }}. {% endif %}{{ ph(b.title|e) }}</h2>
+
+  {%- elif t == "Sub Heading" -%}
+    {%- if not b.no_number %}{% set ns.s = ns.s + 1 %}{% endif -%}
+    <h3 class="blk-sh" style="{{ S_H }}">{% if not b.no_number %}{{ ns.h }}.{{ ns.s }} {% endif %}{{ ph(b.title|e) }}</h3>
+
+  {%- elif t == "Clause" -%}
+    {#- numbered clause: "5.1 Lead-in: text…" – the number and lead-in sit inline in the first paragraph -#}
+    {%- if not b.no_number %}{% set ns.s = ns.s + 1 %}{% endif -%}
+    {%- set head -%}{% if not b.no_number %}<span class="cr-num">{{ ns.h }}.{{ ns.s }}</span>{% endif %}{% if b.title %}<span class="cr-lead">{{ ph(b.title|e) }}</span> {% endif %}{%- endset -%}
+    {%- set body = fill(doc, b.content or "") -%}
+    <div class="clause">
+      {%- if "<p>" in body -%}{{ body.replace("<p>", "<p>" ~ head, 1) }}{%- else -%}<p>{{ head }}{{ body }}</p>{%- endif -%}
+    </div>
+
+  {%- elif t == "Text" -%}
+    <div class="blk-text">{{ fill(doc, b.content or "") }}</div>
+
+  {%- elif t == "Key-Value" -%}
+    {%- if prev != t -%}
+      {%- set lb = (b.col_labels or "").split(",") -%}
+      <table class="grid">
+      {%- if b.col_labels %}<thead><tr><th style="{{ S_TH }}">{{ (lb[0] or "")|trim|e }}</th><th style="{{ S_TH }}">{{ (lb[1] if lb|length > 1 else "")|trim|e }}</th></tr></thead>{% endif %}<tbody>
+    {%- endif -%}
+    <tr><td class="c-first" style="width:38%">{{ phl(b.title) }}</td><td>{{ phl(b.value) }}</td></tr>
+    {%- if nxt != t %}</tbody></table>{% endif -%}
+
+  {%- elif t == "Table Row" -%}
+    {%- if prev != t -%}
+      {%- set lbs = namespace(src="", stop=false) -%}
+      {%- for x in blocks[loop.index0:] -%}
+        {%- if not lbs.stop -%}{%- if x.block_type != t %}{% set lbs.stop = true %}{% elif x.col_labels and not lbs.src %}{% set lbs.src = x.col_labels %}{% endif -%}{%- endif -%}
+      {%- endfor -%}
+      {%- set labels = [] -%}
+      {%- for x in (lbs.src or "Item, Details, Remarks").split(",") %}{% if x.strip() %}{% set _ = labels.append(x.strip()) %}{% endif %}{% endfor -%}
+      {%- set ns.tcols = [[labels|length, 2]|max, 8]|min -%}
+      <table class="grid"><thead><tr>
+      {%- for i in range(ns.tcols) %}<th style="{{ S_TH }}">{{ (labels[i] if labels|length > i else "")|e }}</th>{% endfor -%}
+      </tr></thead><tbody>
+    {%- endif -%}
+    {%- set cells = [b.title, b.value, b.expected, b.col4, b.col5, b.col6, b.col7, b.col8] -%}
+    {#- bold "name" column: the 1st, or the 2nd when the 1st is a row number (No.) -#}
+    <tr>{% for i in range(ns.tcols) %}<td{% if (i == 1 and (cells[0]|string).strip().isdigit()) or (i == 0 and not (cells[0]|string).strip().isdigit()) %} class="c-first"{% endif %}>{{ phl(cells[i]) }}</td>{% endfor %}</tr>
+    {%- if nxt != t %}</tbody></table>{% endif -%}
+
+  {%- elif t == "Data Table" -%}
+    {#- rows come straight from a child table of the document -#}
+    {%- set heads = [] -%}
+    {%- for x in (b.col_labels or b.col_fields or "").split(",") %}{% if x.strip() %}{% set _ = heads.append(x.strip()) %}{% endif %}{% endfor -%}
+    {%- set drows = data_rows(doc, b.source, b.col_fields) -%}
+    <table class="grid"><thead><tr>{% for hd in heads %}<th style="{{ S_TH }}">{{ hd|e }}</th>{% endfor %}</tr></thead><tbody>
+      {%- for r in drows %}<tr>{% for c in r %}<td{% if loop.index0 == 1 %} class="c-first"{% endif %}>{{ c|e }}</td>{% endfor %}</tr>{% endfor -%}
+      {%- if not drows %}<tr><td colspan="{{ [heads|length, 1]|max }}" style="color:#888;font-style:italic">No rows in {{ b.source or "?" }}</td></tr>{% endif -%}
+    </tbody></table>
+
+  {%- elif t == "Signatures" -%}
+    {%- set lb = (b.col_labels or "SUPPLIER, CUSTOMER").split(",") -%}
+    <div class="sigs">
+      {%- if b.title %}<div class="intro">{{ phl(b.title) }}</div>{% endif %}
+      <table class="sigt"><tr>
+        {%- for side in [b.value, b.expected] %}
+        <td>
+          <div class="lbl">{{ (lb[loop.index0] if lb|length > loop.index0 else "")|trim|e }}</div>
+          <div class="space"></div>
+          <div class="line"></div>
+          <div class="cap">Signature</div>
+          {%- for ln in (side or "").split("\n") %}{% if ln.strip() %}<div class="ln">{{ fill(doc, ln|e, blank="") }}</div>{% endif %}{% endfor %}
+        </td>
+        {%- endfor %}
+      </tr></table>
+    </div>
+
+  {%- elif t == "Image" -%}
+    {#- Photos: each row is its own small table so rows break cleanly between pages,
+        every photo sits in a fixed-height box (rows stay compact and aligned),
+        and a shorter last row is centred. -#}
+    {%- set ns.fig = ns.fig + 1 -%}
+    {%- if prev != t -%}
+      {%- set ns.cols = (b.columns or "2")|int -%}
+      {%- if ns.cols not in [1, 2, 3] %}{% set ns.cols = 2 %}{% endif -%}
+      {%- set ns.size = b.image_height if b.image_height in ["Small", "Medium", "Large"] else "Medium" -%}
+      {%- set ns.cell = 0 -%}
+      {#- count photos in this group to size the last row -#}
+      {%- set gc = namespace(n=0, stop=false) -%}
+      {%- for x in blocks[loop.index0:] -%}
+        {%- if not gc.stop -%}{%- if x.block_type == "Image" %}{% set gc.n = gc.n + 1 %}{% else %}{% set gc.stop = true %}{% endif -%}{%- endif -%}
+      {%- endfor -%}
+      {%- set ns.gcount = gc.n -%}
+      <div class="figs">
+    {%- endif -%}
+    {%- set hmap = {1: {"Small": 55, "Medium": 75, "Large": 100}, 2: {"Small": 38, "Medium": 52, "Large": 70}, 3: {"Small": 30, "Medium": 40, "Large": 52}} -%}
+    {%- set hmm = hmap[ns.cols][ns.size] -%}
+    {%- if ns.cell % ns.cols == 0 -%}
+      {%- set left = ns.gcount - ns.cell -%}
+      {%- set in_row = ns.cols if left >= ns.cols else left -%}
+      <div class="figrow"><table class="figtbl" style="width:{{ ((100 * in_row / ns.cols))|round(2) }}%"><tr>
+    {%- endif -%}
+    <td style="width:{{ (100 / (ns.cols if (ns.gcount - (ns.cell - ns.cell % ns.cols)) >= ns.cols else (ns.gcount - (ns.cell - ns.cell % ns.cols))))|round(2) }}%">
+      <table class="phbox"><tr><td style="height:{{ hmm }}mm"><img src="{{ b.image }}" style="max-height:{{ hmm }}mm"></td></tr></table>
+      {%- if b.title %}<div class="figcap">{% if not (b.title|lower).startswith("fig") %}Fig. {{ ns.fig }} – {% endif %}{{ b.title|e }}</div>{% endif -%}
+    </td>
+    {%- set ns.cell = ns.cell + 1 -%}
+    {%- if ns.cell % ns.cols == 0 or nxt != t -%}
+      </tr></table></div>
+    {%- endif -%}
+    {%- if nxt != t -%}</div>{%- endif -%}
+
+  {%- elif t == "Info Table" -%}
+    {%- if not ns.info_done %}<div class="info-in-body">{{ info_html }}</div>{% set ns.info_done = true %}{% endif -%}
+
+
+  {%- elif t == "Spacer" -%}
+    <div style="height:{{ {"Small": 4, "Medium": 8, "Large": 15}.get(b.image_height or "Medium", 8) }}mm"></div>
+
+  {%- elif t == "Page Break" -%}
+    <div class="page-break"></div>
+  {%- endif -%}
+{%- endfor %}
+{%- if ns.keep_open %}</div>{% endif %}
+
+{%- if HD.show %}
+{#- inline styles only: Frappe renders the header as a separate page for every PDF page -#}
+<div id="header-html">
+  <table style="width:100%; border-collapse:collapse; border-bottom:1px solid {{ CS.header_line_color or "#C9D3DE" }};"><tr>
+    <td style="width:1%; white-space:nowrap; vertical-align:middle; padding:0 24px 8px 0;">{% if HD.logo %}<img src="{{ HD.logo }}" style="height:{{ (logo_h * 3.78)|round|int }}px; width:auto; max-width:none;">{% endif %}</td>
+    <td style="vertical-align:middle; padding:0 0 8px 0; text-align:right; font-family:{{ FONT|e }}; font-style:italic; font-size:11px; color:#444; line-height:1.35;">{{ fill(doc, (HD.text or "")|e, blank="")|replace("\n", "<br>") }}</td>
+  </tr></table>
+</div>
+{%- endif %}
+
+<div id="footer-html">
+  {%- if PAGE_NO or CS.footer_text %}
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; border-top:1px solid {{ PC }}; font-family:{{ FONT|e }};">
+    <tr>
+      <td style="padding-top:4px; font-size:10px; color:#555; text-align:left;">{{ (CS.footer_text or "")|e }}</td>
+      <td style="padding-top:4px; font-size:10px; color:#555; text-align:right; white-space:nowrap;">
+        {%- if PAGE_NO %}Page <span class="page"></span> of <span class="topage"></span>{% endif %}</td>
+    </tr>
+  </table>
+  {%- endif %}
+</div>

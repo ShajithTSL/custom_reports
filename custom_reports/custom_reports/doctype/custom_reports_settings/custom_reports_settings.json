@@ -1,0 +1,161 @@
+{
+ "actions": [],
+ "creation": "2026-11-12 10:00:00.000000",
+ "modified": "2026-11-12 12:00:00.000000",
+ "owner": "Administrator",
+ "modified_by": "Administrator",
+ "doctype": "DocType",
+ "name": "Custom Reports Settings",
+ "module": "Custom Reports",
+ "engine": "InnoDB",
+ "istable": 0,
+ "editable_grid": 1,
+ "field_order": [
+  "sb_dt",
+  "doctypes",
+  "sb_header",
+  "show_header",
+  "header_logo",
+  "logo_height",
+  "cb_hd",
+  "header_text",
+  "header_line_color",
+  "sb_look",
+  "font",
+  "primary_color",
+  "accent_color",
+  "cb_1",
+  "uppercase_headings",
+  "show_page_numbers",
+  "footer_text"
+ ],
+ "fields": [
+  {
+   "fieldname": "sb_dt",
+   "fieldtype": "Section Break",
+   "label": "Enabled DocTypes"
+  },
+  {
+   "fieldname": "doctypes",
+   "fieldtype": "Table",
+   "label": "Use the report editor on",
+   "options": "Custom Reports DocType",
+   "description": "Add the DocType (e.g. your Maintenance Contract DocType) and save. The editor, templates and a print format 'Custom Report - <DocType>' are added to it."
+  },
+  {
+   "fieldname": "sb_header",
+   "fieldtype": "Section Break",
+   "label": "Header (every page)"
+  },
+  {
+   "fieldname": "show_header",
+   "fieldtype": "Check",
+   "label": "Show Header",
+   "default": "1"
+  },
+  {
+   "fieldname": "header_logo",
+   "fieldtype": "Attach Image",
+   "label": "Company Logo",
+   "depends_on": "show_header",
+   "description": "Printed on the left of the header"
+  },
+  {
+   "fieldname": "logo_height",
+   "fieldtype": "Float",
+   "label": "Logo Height (mm)",
+   "default": "14",
+   "depends_on": "show_header"
+  },
+  {
+   "fieldname": "cb_hd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "header_text",
+   "fieldtype": "Small Text",
+   "label": "Header Text (right)",
+   "depends_on": "show_header",
+   "default": "Maintenance Contract — {{supplier_name}} / {{customer_name}}",
+   "description": "Italic text on the right. {{fieldname}} placeholders are filled from the document; new lines are kept."
+  },
+  {
+   "fieldname": "header_line_color",
+   "fieldtype": "Color",
+   "label": "Header Line Colour",
+   "default": "#C9D3DE",
+   "depends_on": "show_header"
+  },
+  {
+   "fieldname": "sb_look",
+   "fieldtype": "Section Break",
+   "label": "Look"
+  },
+  {
+   "fieldname": "font",
+   "fieldtype": "Select",
+   "label": "Font",
+   "options": "Serif (Georgia / Cambria)\nSans-serif (Arial)",
+   "default": "Serif (Georgia / Cambria)"
+  },
+  {
+   "fieldname": "primary_color",
+   "fieldtype": "Color",
+   "label": "Heading / Table Colour",
+   "default": "#1F4E79"
+  },
+  {
+   "fieldname": "accent_color",
+   "fieldtype": "Color",
+   "label": "Accent Line Colour",
+   "default": "#B8963E",
+   "description": "The line under the main title"
+  },
+  {
+   "fieldname": "cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "uppercase_headings",
+   "fieldtype": "Check",
+   "label": "Headings in CAPITALS",
+   "default": "1"
+  },
+  {
+   "fieldname": "show_page_numbers",
+   "fieldtype": "Check",
+   "label": "Show Page X of Y in Footer",
+   "default": "1"
+  },
+  {
+   "fieldname": "footer_text",
+   "fieldtype": "Data",
+   "label": "Footer Text",
+   "description": "Optional, printed on the left of the footer on every page"
+  }
+ ],
+ "permissions": [
+  {
+   "role": "System Manager",
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "delete": 1,
+   "report": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "email": 1,
+   "share": 1
+  },
+  {
+   "role": "All",
+   "read": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "links": [],
+ "issingle": 1
+}

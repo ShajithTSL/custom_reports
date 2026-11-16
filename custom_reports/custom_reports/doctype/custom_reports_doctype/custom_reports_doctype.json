@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "creation": "2026-11-12 10:00:00.000000",
+ "modified": "2026-11-12 12:00:00.000000",
+ "owner": "Administrator",
+ "modified_by": "Administrator",
+ "doctype": "DocType",
+ "name": "Custom Reports DocType",
+ "module": "Custom Reports",
+ "engine": "InnoDB",
+ "istable": 1,
+ "editable_grid": 1,
+ "field_order": [
+  "document_type",
+  "print_format",
+  "set_default",
+  "header_logo",
+  "header_text"
+ ],
+ "fields": [
+  {
+   "fieldname": "document_type",
+   "fieldtype": "Link",
+   "label": "DocType",
+   "options": "DocType",
+   "reqd": 1,
+   "in_list_view": 1,
+   "columns": 3
+  },
+  {
+   "fieldname": "print_format",
+   "fieldtype": "Data",
+   "label": "Print Format",
+   "read_only": 1,
+   "in_list_view": 1,
+   "columns": 2
+  },
+  {
+   "fieldname": "set_default",
+   "fieldtype": "Check",
+   "label": "Make Default Print Format",
+   "in_list_view": 1,
+   "columns": 1
+  },
+  {
+   "fieldname": "header_logo",
+   "fieldtype": "Attach Image",
+   "label": "Header Logo (optional)",
+   "in_list_view": 1,
+   "columns": 2,
+   "description": "Leave empty to use the logo above"
+  },
+  {
+   "fieldname": "header_text",
+   "fieldtype": "Small Text",
+   "label": "Header Text (optional)",
+   "in_list_view": 1,
+   "columns": 2,
+   "description": "Leave empty to use the header text above"
+  }
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "links": []
+}
